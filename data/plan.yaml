@@ -1,0 +1,1430 @@
+name: Utathya Aich — deep learning from first principles
+start_date: '2026-10-01'
+max_end_date: '2028-01-16'
+entries:
+- id: W00
+  kind: tooling
+  phase: 0
+  days: 4
+  title: Linux, Git and GitHub
+  math:
+  - Linux filesystem, permissions, processes, pipes and redirection
+  - Shell scripting and environment variables
+  - 'Git objects: blobs, trees, commits, refs; merge vs rebase'
+  - 'GitHub: SSH keys, pull requests, Actions CI, branch protection, secrets'
+  build:
+  - Project setup script and dotfiles
+  - tmux, ssh, rsync, grep/find/sed/awk
+  - dl-from-scratch repo with CI and branch protection
+  - Deploy the exam coach
+  deliverable: Repo with CI on GitHub; exam coach deployed for your email only.
+  tasks: []
+- id: W01
+  kind: topic
+  phase: 1
+  title: Vectors and matrices ∥ Python OOP and NumPy
+  math:
+  - Vector spaces, span, independence
+  - Inner products; prove Cauchy–Schwarz
+  - Matmul derived as composition of maps
+  - Gram–Schmidt and QR; determinant as volume
+  build:
+  - Python object model; Vector and Matrix classes
+  - NumPy buffers, strides, broadcasting, views vs copies
+  - Generators, decorators, context managers
+  - dlkit package with tests and CI
+  deliverable: dlkit.Tensor tested; QR matches NumPy; CI green.
+  paper_idea: How low-rank can a vision–language projector be?
+  tasks:
+  - w01_gram_schmidt
+  - w01_broadcast_shape
+- id: W01B
+  kind: topic
+  phase: 1
+  title: Coordinate geometry and rigid transforms ∥ dlkit.geometry
+  math:
+  - Coordinate systems; distance and the pairwise-distance identity
+  - Lines, planes, hyperplanes; point-to-plane signed distance; margins
+  - Conics as quadratic forms; Gaussian contours as ellipses
+  - 'Rotations: 2D/3D matrices, Euler angles, Rodrigues, quaternions'
+  - Homogeneous coordinates, affine maps, the pinhole camera
+  - 'Polygons: shoelace area, convex hull, barycentric coordinates'
+  build:
+  - Vectorized distance matrices
+  - Conic and covariance-ellipse fitting
+  - Rotation library (matrix, axis–angle, quaternion, slerp)
+  - Transform chains and camera projection
+  - dlkit.geometry with tests and CI
+  deliverable: dlkit.geometry package and a classifier-geometry notebook.
+  paper_idea: Does the rotation representation matter for wearable sensors?
+  key_results:
+  - Signed distance to w·x + b = 0 is (w·x + b)/‖w‖
+  - 'Rodrigues: R = I + sinθ K + (1 − cosθ) K²'
+  - 'Pinhole: x ~ K[R | t]X, divide by depth'
+  - Shoelace area = ½ Σ (x_i y_{i+1} − x_{i+1} y_i)
+  tasks:
+  - w01b_lines_polygons
+  - w01b_rotations_camera
+- id: D1
+  kind: depth
+  phase: 1
+  title: 'Depth: Linear algebra and geometry in depth'
+  covers:
+  - W01
+  - W01B
+  math:
+  - 'Proofs: spectral theorem for symmetric matrices; existence of the SVD; Eckart–Young (best rank-k approximation)'
+  - 'Proofs: Householder QR and why it is more stable than Gram–Schmidt; SO(3) is a group but not a vector space; quaternions
+    double-cover SO(3); a homography has 8 degrees of freedom'
+  - 'Original papers, three passes: Trefethen & Bau lectures 4–5 and 10 (SVD, Householder); Zhou et al. 2019 On the Continuity
+    of Rotation Representations in Neural Networks'
+  build:
+  - 'Reproduce (A100, light): Zhou et al.''s rotation-regression experiment — Euler vs quaternion vs 6D representations on
+    point-cloud pose; 3 seeds'
+  - 'Inside the model: plot the learned error against rotation angle and show where the quaternion and Euler models jump (the
+    discontinuity). Extension: pilot the Week 1B idea on a HAR dataset. Carried-over items from Weeks 1–1B'
+  deliverable: prove what Weeks 1 and 1B used, and reproduce one result where the geometry decides whether a network can learn.
+  key_results: []
+  tasks: []
+- id: W02
+  kind: topic
+  phase: 1
+  title: Least squares ∥ Pandas, SQL, regression
+  math:
+  - Gaussian elimination and LU
+  - Rank–nullity; projections
+  - Normal equations derived; QR least squares
+  - Conditioning; ridge closed form
+  - 'Losses ∥ metrics: MSE (Gaussian), MAE (Laplace), Huber; MAE, RMSE, R², MAPE pitfalls'
+  - 'Objective: min ‖Xw − y‖² (+λ‖w‖²) — convex quadratic, closed form'
+  build:
+  - 'Pandas: groupby, merge, pivot'
+  - 'SQL in SQLite/DuckDB: joins, CTEs, window functions'
+  - Assert SQL features = Pandas features
+  - Regression three ways + ridge pipeline
+  deliverable: 10 questions answered in SQL and Pandas with asserted equality; regression report.
+  paper_idea: How much does pipeline leakage inflate public results?
+  tasks:
+  - w02_lu_solve
+  - w02_ridge
+- id: W02B
+  kind: topic
+  phase: 1
+  title: Functions and their graphs ∥ visualization for intuition
+  math:
+  - 'Functions: domain, range, composition, inverse; graph transformations a·f(b(x−c))+d'
+  - 'Families: linear, polynomial (roots, end behaviour), rational (asymptotes), absolute value, piecewise and step (ReLU,
+    Heaviside)'
+  - Exponential, logarithm, power laws; semilog and log-log plots turn them into lines; sigmoid, tanh, softplus shapes; periodic
+    functions
+  - 'Functions of two variables: surfaces, contour (level-set) plots, heatmaps, vector fields; quadratic forms as bowls, saddles
+    and ridges'
+  - 'Reading data plots: histogram, KDE, box/violin, scatter, line, bar, heatmap, pair plots; loss, learning, calibration
+    and ROC curves; misleading axes'
+  - 'Sketch before you plot: limits, continuity, monotonicity, convexity by chords, growth-rate comparison (log n, n, n²,
+    eⁿ)'
+  - 'Objective this week: an objective is a function — its graph shows minima, flat regions, kinks and saddles before any
+    calculus'
+  build:
+  - 'dlkit.viz: function explorer with transformations (matplotlib, interactive sliders)'
+  - Gallery of 20 function families, each sketched by hand first, then plotted
+  - Log-log fit of a power law; semilog test for exponential growth
+  - Surface + contour + vector-field views of quadratics and the Rosenbrock function
+  - Plot-reading drills on real loss curves and learning curves; redraw a misleading chart honestly
+  deliverable: dlkit.viz and a 20-family function gallery with hand sketches next to plots.
+  paper_idea: Do loss-landscape visualizations predict generalization?
+  key_results:
+  - 'a·f(b(x−c))+d: c shifts right, d up, b compresses, a stretches'
+  - y = a·x^k is a line of slope k on log-log axes; y = a·e^{kx} is a line on semilog-y
+  - 'Quadratic xᵀAx: eigenvalue signs decide bowl, saddle or ridge'
+  - Convex ⇔ every chord lies above the graph
+  tasks:
+  - w02b_function_graphs
+  - w02b_level_sets
+- id: W03
+  kind: topic
+  phase: 1
+  title: Calculus and gradient descent ∥ autodiff
+  math:
+  - Gradient as steepest ascent
+  - Matrix calculus by index notation
+  - GD convergence and the 1/L step
+  - SGD, momentum; forward vs reverse mode
+  - 'Losses ∥ metrics: gradients of MSE, MAE, Huber; convex vs non-convex loss surfaces'
+  - 'Activations: derivatives and saturation of sigmoid, tanh, softplus, ReLU'
+  - 'Objective: least squares minimized iteratively; a 2-layer net''s MSE is non-convex'
+  build:
+  - Finite-difference gradient checker
+  - GD and minibatch SGD on Week 2 data
+  - Scalar autodiff engine
+  - Tensor autodiff with broadcasting
+  deliverable: dlkit.autograd trains a 2-layer net on two-moons.
+  paper_idea: Curvature-aware learning-rate warmup.
+  tasks:
+  - w03_numerical_grad
+  - w03_scalar_autodiff
+- id: D2
+  kind: depth
+  phase: 1
+  title: 'Depth: Least squares, calculus and autodiff in depth'
+  covers:
+  - W02
+  - W02B
+  - W03
+  math:
+  - 'Proofs: Gauss–Markov theorem; condition number of the normal equations is κ² vs κ for QR; GD on a strongly convex quadratic
+    converges at rate (κ − 1)/(κ + 1)'
+  - 'Proofs: the cheap-gradient principle (reverse mode costs a small constant times the forward pass); implicit function
+    theorem → implicit differentiation'
+  - 'Original papers, three passes: Baydin et al. 2018 Automatic Differentiation in Machine Learning: a Survey; Griewank &
+    Walther Evaluating Derivatives ch 3 (selected)'
+  build:
+  - 'Reproduce (A100): benchmark dlkit.autograd against PyTorch eager and torch.compile on MLPs of growing size; match gradients
+    to 1e-6 and profile where his engine loses time'
+  - 'Inside the model: visualize the computation graph and memory held for backward. Extension: hyperparameter gradients —
+    differentiate the validation loss of ridge regression with respect to λ by implicit differentiation, compare with grid
+    search'
+  deliverable: prove why least squares and reverse-mode autodiff work as well as they do, and make his autodiff engine fast
+    and exact.
+  key_results: []
+  tasks: []
+- id: W04
+  kind: topic
+  phase: 1
+  title: Probability and MLE ∥ classification
+  math:
+  - Bayes' rule from the axioms
+  - Distributions, expectation, variance
+  - Logistic and softmax as MLE; L2 = Gaussian prior
+  - Bias–variance; ROC/PR; bootstrap, permutation tests
+  - 'Losses ∥ metrics: binary/multiclass/multilabel CE as NLL, class weights; precision, recall, F1 macro/micro/weighted,
+    ROC-AUC vs PR-AUC, Cohen''s kappa'
+  - 'Activations: output links — identity, sigmoid, softmax, exp/softplus; softmax temperature and shift invariance'
+  - 'Architecture ∥ interpretability: GLM as a one-layer network; reading coefficients (scaling, collinearity, confounding);
+    permutation importance'
+  - 'Objective: MLE → cross-entropy; MAP → add λ‖w‖²; convex for logistic/softmax regression'
+  build:
+  - Naive Bayes spam filter
+  - 'Samplers: inverse-CDF, Box–Muller, Cholesky'
+  - Logistic and softmax regression (MNIST ≥ 91%)
+  - k-NN, cross-validation, dlkit.stats
+  deliverable: Classifiers in mini_sklearn with bootstrap CIs.
+  paper_idea: How many seeds is enough?
+  tasks:
+  - w04_logistic_loss_grad
+  - w04_roc_auc
+- id: W04B
+  kind: topic
+  phase: 1
+  title: Probability in depth ∥ simulation, sampling and Monte Carlo
+  math:
+  - Counting, total probability, base rates
+  - Discrete and continuous distributions from their stories; memorylessness
+  - Joint/conditional distributions; change of variables; MGFs
+  - Multivariate Gaussian conditioning (Schur complement); Gaussian KL
+  - Markov, Chebyshev, Chernoff, Hoeffding; LLN and CLT
+  - Importance and rejection sampling; Markov chains; Metropolis–Hastings; Gumbel-max, reparameterization
+  - 'Losses ∥ metrics: proper scoring rules (log loss, Brier); reparameterized gradient of an expected loss'
+  - 'Objective: expectations E[ℓ(x;θ)] estimated by Monte Carlo; reparameterization changes the gradient estimator, not the
+    objective'
+  build:
+  - dlkit.prob distributions vs scipy.stats
+  - Change-of-variables checker
+  - Gaussian-process regression from the conditioning formula
+  - Test-set size calculator
+  - Importance sampler, MH sampler, PageRank
+  deliverable: dlkit.prob and a 'probability by simulation' notebook.
+  paper_idea: Confidence intervals for test accuracy that survive distribution shift.
+  key_results:
+  - 'Gaussian conditional: μ_u + Σ_uo Σ_oo⁻¹ (x_o − μ_o), Σ_uu − Σ_uo Σ_oo⁻¹ Σ_ou'
+  - 'Hoeffding: n ≥ ln(2/δ) / (2ε²)'
+  - Importance-sampling ESS = (Σw)² / Σw²
+  - MH acceptance min(1, p(y)/p(x)) for symmetric proposals
+  tasks:
+  - w04b_gaussian_hoeffding
+  - w04b_mcmc_importance
+- id: D3
+  kind: depth
+  phase: 1
+  title: 'Depth: Probability in depth'
+  covers:
+  - W04
+  - W04B
+  math:
+  - 'Proofs: CLT via characteristic functions; Hoeffding''s lemma and inequality; concavity of the logistic-regression log-likelihood'
+  - 'Proofs: detailed balance implies stationarity (Metropolis–Hastings); Hamiltonian dynamics preserve volume and energy;
+    consistency of the MLE (sketch)'
+  - 'Original papers, three passes: Neal 2011 MCMC Using Hamiltonian Dynamics §1–3; Kingma & Welling 2014 Auto-Encoding Variational
+    Bayes (the reparameterization trick)'
+  build:
+  - 'Reproduce (CPU is enough): HMC from scratch on a Bayesian logistic regression; compare with NumPyro''s NUTS on posterior
+    means, R-hat and effective sample size'
+  - 'Inside the model: trace plots and energy diagnostics — when and why HMC fails (funnels). Extension: pilot the Week 4B
+    idea (importance-weighted accuracy intervals under shift)'
+  deliverable: prove the limit theorems and sampling results he used, and reproduce a modern sampler from scratch.
+  key_results: []
+  tasks: []
+- id: W05
+  kind: topic
+  phase: 1
+  title: Eigen, SVD, EM ∥ unsupervised learning
+  math:
+  - Spectral theorem
+  - PCA by variance maximization
+  - SVD and Eckart–Young
+  - Jensen's inequality; EM via the ELBO; graph Laplacian
+  - 'Losses ∥ metrics: k-means distortion, GMM NLL, reconstruction error; silhouette, ARI, NMI, anomaly AUROC'
+  - 'Objective: PCA = max variance s.t. ‖u‖=1; k-means distortion (non-convex, combinatorial); GMM log-likelihood via EM'
+  build:
+  - Power iteration; eigenfaces
+  - Matrix-factorization recommender (MovieLens via SQL)
+  - k-means++, GMM with EM
+  - Spectral clustering; anomaly detection
+  deliverable: Unsupervised suite in mini_sklearn; analysis report.
+  paper_idea: Does embedding spectrum predict probe accuracy?
+  tasks:
+  - w05_pca
+  - w05_kmeans_step
+- id: W05B
+  kind: topic
+  phase: 1
+  title: Statistical inference ∥ data analysis and honest model comparison
+  math:
+  - 'Estimators: bias, variance, MSE, consistency; method of moments vs MLE; Simpson''s paradox'
+  - Fisher information, Cramér–Rao bound, MLE asymptotics, delta method
+  - 'Confidence intervals: t, Wald vs Wilson, bootstrap BCa'
+  - 'Tests: Neyman–Pearson, power, t/Welch/paired, chi-square, McNemar, Wilcoxon, permutation'
+  - 'Multiple testing: Bonferroni, Holm, Benjamini–Hochberg; OLS inference'
+  - 'Bayesian inference: conjugate priors, credible intervals, A/B tests'
+  - 'Losses ∥ metrics: bootstrap CIs for F1/AUC; paired tests on per-example losses'
+  - 'Objective: estimation as optimization (MLE, moments, posteriors)'
+  build:
+  - EDA with SQL and Pandas
+  - CRLB simulations
+  - Interval coverage study
+  - Tests vs scipy.stats; OLS vs statsmodels
+  - Model-comparison report with paired tests and BH
+  deliverable: dlkit.stats extended and a reusable model-comparison template.
+  paper_idea: How many deep-learning 'wins' survive proper statistics?
+  key_results:
+  - Bernoulli CRLB = p(1 − p)/n
+  - Wilson interval stays inside [0, 1] and keeps coverage at small n
+  - McNemar uses only the discordant pairs
+  - 'BH: reject the k smallest with p_(k) ≤ kq/m'
+  tasks:
+  - w05b_intervals_tests
+  - w05b_fdr_bayes_ab
+- id: R1
+  kind: rest
+  phase: 1
+  title: Rest week R1 — no study (New Year)
+  math: []
+  build: []
+  deliverable: 'Rested. Optional: up to 30 minutes a day on due review items.'
+  key_results: []
+  tasks: []
+- id: D4
+  kind: depth
+  phase: 1
+  title: 'Depth: Unsupervised learning and statistics in depth'
+  covers:
+  - W05
+  - W05B
+  math:
+  - 'Proofs: EM never decreases the likelihood (ELBO view); PCA as maximum variance equals minimum reconstruction error; k-means
+    converges'
+  - 'Proofs: Neyman–Pearson lemma; Benjamini–Hochberg controls FDR under independence; Cramér–Rao bound'
+  - 'Original papers, three passes: Dempster, Laird & Rubin 1977 §1–3; Ng, Jordan & Weiss 2001 (spectral clustering); Bouthillier
+    et al. 2021 Accounting for Variance in Machine Learning Benchmarks'
+  build:
+  - 'Reproduce (A100): Bouthillier et al.''s variance study on CIFAR-10 with ResNet-18 — vary seed, data order, split and
+    augmentation separately; \~30 short runs as a Slurm array'
+  - 'Inside the model: how much do two seeds'' representations differ (CKA between runs)? Extension: pilot the Week 5B idea
+    (how many reported wins survive proper statistics)'
+  deliverable: prove the guarantees behind EM, PCA and multiple testing, and measure how much of deep-learning "progress"
+    is noise.
+  key_results: []
+  tasks: []
+- id: W06A
+  kind: topic
+  phase: 2
+  title: Formulating optimization problems ∥ every ML and DL method as an objective
+  math:
+  - 'Anatomy: decision variables, objective, constraints, feasible set; standard form; equivalent reformulations (monotone
+    transforms, epigraph, slack variables)'
+  - 'Convexity as a modelling property: convex sets and functions, operations that preserve convexity, disciplined convex
+    programming rules'
+  - 'Problem classes: LP, QP, SOCP, integer programs; turning |x|, max and L1 into LPs; norm constraints into SOCPs; LP geometry
+    (vertices)'
+  - 'Learning as optimization: empirical risk minimization; MLE → negative log-likelihood, MAP → regularizer; penalized vs
+    constrained forms (Lagrangian equivalence); surrogate losses; objective vs metric mismatch'
+  - 'Deep-learning objectives: non-convex compositions; multi-objective (weighted sums, Pareto fronts); constrained training
+    via Lagrangians; bilevel (hyperparameters, meta-learning); minimax (GANs, adversarial training); RL''s expected return'
+  - 'Objective this week: write the formal problem — variables, objective, constraints, convex or not, solver — for 12 models
+    from linear regression to DPO and diffusion'
+  build:
+  - Model 5 real problems (diet, portfolio, scheduling, LAD regression, max-margin) in scipy.optimize and cvxpy
+  - LAD regression as an LP; Markowitz portfolio as a QP with its efficient frontier
+  - 'Ridge penalized vs norm-ball constrained: trace the λ ↔ radius map'
+  - Projected and proximal gradient (lasso, simplex constraints)
+  - 'Objective zoo notebook: 12 ML/DL objectives, each formal and coded'
+  deliverable: 'An objective-zoo notebook: 12 ML/DL methods written as formal optimization problems, coded and solved.'
+  paper_idea: When does the training objective disagree with the evaluation metric?
+  key_results:
+  - Every problem = variables + objective + constraints; reformulate until a known class fits
+  - '|x|, max and L1 become linear with an epigraph variable'
+  - Penalized and constrained forms trace the same solution path (via the Lagrange multiplier)
+  - MLE ⇒ minimize NLL; MAP ⇒ add −log prior as a regularizer
+  tasks:
+  - w06a_formulations
+  - w06a_lp_reformulation
+- id: W06
+  kind: topic
+  phase: 2
+  title: Optimization theory ∥ SVMs, trees, boosting
+  math:
+  - Convexity and condition number
+  - Newton; Adam with bias correction
+  - Lagrange, KKT, duality → SVM dual
+  - Bagging variance; boosting as functional GD
+  - 'Losses ∥ metrics: hinge, logistic, exponential surrogates of 0-1 loss; Gini/entropy impurity; custom boosting losses'
+  - 'Architecture ∥ interpretability: inductive biases of SVMs, trees, boosting; impurity vs permutation importance vs TreeSHAP'
+  - 'Objective: SVM QP and dual; trees as greedy impurity minimization; boosting as functional gradient descent'
+  build:
+  - Optimizer zoo on Rosenbrock
+  - Logistic regression by IRLS
+  - Linear and kernel SVMs
+  - Trees, random forest, gradient boosting; Kaggle entry
+  deliverable: mini_sklearn complete; optimizer report.
+  paper_idea: Gradient-boosted trees on frozen foundation-model embeddings.
+  tasks:
+  - w06_adam_step
+  - w06_gini_split
+- id: W07
+  kind: topic
+  phase: 2
+  title: Information theory ∥ neural nets from scratch
+  math:
+  - Entropy, cross-entropy, KL ≥ 0
+  - Softmax-CE gradient = p − y; backprop
+  - Xavier and He init from variance
+  - KL asymmetry; mutual information
+  - 'Losses ∥ metrics: softmax CE as KL, distillation KL with temperature; ECE, reliability diagrams, NLL, Brier, temperature
+    scaling'
+  - 'Activations: why nonlinearity, universal approximation, ReLU linear regions, dying ReLU, Leaky/PReLU/ELU, SELU fixed
+    point, GELU, SiLU, Mish; init–activation pairing'
+  - 'Architecture ∥ interpretability: MLP width vs depth; first-layer weights, digit-selective units and their ablation'
+  - 'Objective: mean cross-entropy + weight decay over all weights — non-convex, symmetric minima'
+  build:
+  - NumPy MLP forward and backward
+  - Gradient check; MNIST ≥ 97%
+  - dlkit.nn on your own autodiff
+  - Port to PyTorch
+  deliverable: Same MLP in NumPy and PyTorch over 5 seeds.
+  paper_idea: Does label smoothing's calibration survive sensor shift?
+  tasks:
+  - w07_softmax_ce
+  - w07_mlp_backward
+  - w07_activation_zoo
+  key_results:
+  - σ' = σ(1 − σ); tanh' = 1 − tanh²; GELU = x·Φ(x); SiLU = x·σ(x)
+- id: D5
+  kind: depth
+  phase: 2
+  title: 'Depth: Optimization, classical ML and neural networks in depth'
+  covers:
+  - W06A
+  - W06
+  - W07
+  math:
+  - 'Proofs: KKT conditions (necessity under Slater, sufficiency for convex problems); strong duality; the SVM dual and the
+    representer theorem'
+  - 'Proofs: AdaBoost as stagewise exponential-loss minimization; universal approximation for one hidden layer (Cybenko-style
+    sketch); variance propagation → He initialization'
+  - 'Original papers, three passes: Friedman 2001 Greedy Function Approximation; Glorot & Bengio 2010; He et al. 2015 Delving
+    Deep into Rectifiers; Klambauer et al. 2017 (SELU)'
+  build:
+  - 'Reproduce (A100): He et al.''s depth experiment — 22- and 30-layer ReLU networks with Xavier vs He initialization; add
+    SELU without normalization; 3 seeds'
+  - 'Inside the model: per-layer activation and gradient histograms at initialization and after 1 epoch for each initialization.
+    Extension: activation × initialization grid at depth 10–50'
+  deliverable: prove the duality and initialization results, and reproduce the experiment that made deep ReLU networks trainable.
+  key_results: []
+  tasks: []
+- id: W08
+  kind: topic
+  phase: 2
+  title: Number theory ∥ PyTorch, TensorFlow, precision
+  math:
+  - Euclid, Bézout, primes
+  - Fermat, Euler, CRT, RSA
+  - PRNGs, hashing
+  - 'IEEE-754: fp16 vs bf16 vs int8'
+  - 'Losses ∥ metrics: fp16 loss scaling, stable log-sum-exp; accuracy gap across precisions'
+  - 'Activations: stable softplus/log-sigmoid, fp16 overflow, hard-sigmoid, hard-swish, ReLU6'
+  - 'Objective: finite precision changes the function; AdamW decay ≠ L2 in Adam'
+  build:
+  - PyTorch internals; TensorFlow and Keras
+  - Reproducible seeds and hash-based splits
+  - Mixed precision and int8 quantization
+  - Grokking on a + b mod 97
+  deliverable: Training templates in both frameworks; grokking replicated.
+  paper_idea: Does numeric precision change when grokking happens?
+  tasks:
+  - w08_ext_gcd
+  - w08_quantize_int8
+- id: W08B
+  kind: topic
+  phase: 2
+  title: GPU computing ∥ CUDA and kernels from scratch
+  math:
+  - 'GPU execution model: SMs, warps, threads and blocks; SIMT and warp divergence'
+  - 'Memory hierarchy: global/shared/local memory and registers; coalesced access; the roofline model (compute- vs memory-bound)'
+  - 'Occupancy: registers and shared memory per block against per-SM limits; latency hiding via warp scheduling'
+  - Tiling a matmul for shared-memory reuse; counting FLOPs moved vs bytes moved
+  - 'Synchronization: barriers, atomics, race conditions; why a naive histogram kernel is wrong'
+  - Tensor-core numerics: fp32 accumulation under fp16/bf16 inputs; nondeterministic reductions
+  - 'Objective this week: a kernel''s wall-clock time is set by whichever of compute or memory it is bound on, not by FLOPs alone'
+  build:
+  - A toy GPU simulator in NumPy modelling warps, SM scheduling and divergence cost
+  - Vector-add, reduction and tiled-matmul CUDA kernels; benchmark against cuBLAS
+  - Rewrite the tiled matmul in Triton; sweep block size and compare against the hand-written kernel
+  - dlkit.gpu roofline calculator: FLOPs and bytes in, compute- or memory-bound prediction out
+  - Profile a memory-bound kernel with Nsight Compute and fix it
+  deliverable: 'dlkit.gpu: a roofline calculator and a tiled matmul kernel (CUDA or Triton) within 20% of cuBLAS on the A100.'
+  paper_idea: How much of a transformer's step time is matmul versus memory-bound ops (norm, softmax, attention)?
+  tasks: []
+- id: W09
+  kind: topic
+  phase: 2
+  title: Deep-net optimization ∥ training in practice
+  math:
+  - Gradient-noise scale, warmup
+  - Adam + L2 ≠ AdamW
+  - BatchNorm backward
+  - Residual gradient flow; double descent
+  - 'Losses ∥ metrics: weighted CE, focal loss, label smoothing, mixup targets, pinball/quantile loss; balanced and top-k
+    accuracy'
+  - 'Activations: dead and saturated units, activation/gradient statistics, activation × normalization ablation'
+  - 'Architecture ∥ interpretability: residual blocks, BatchNorm/LayerNorm/GroupNorm; CKA across layers during training'
+  - 'Objective: schedules change the path; label smoothing, mixup, class weights change the objective'
+  build:
+  - LR range tests and schedules
+  - AdamW in PyTorch and Keras
+  - BN and LN from scratch
+  - Optuna sweep; fix broken scripts
+  deliverable: Ablation table with 95% CIs.
+  paper_idea: Is the framework a hidden hyperparameter?
+  tasks:
+  - w09_batchnorm
+  - w09_warmup_cosine
+  - w09_loss_zoo
+- id: D6
+  kind: depth
+  phase: 2
+  title: 'Depth: Number formats, frameworks and training dynamics in depth'
+  covers:
+  - W08
+  - W08B
+  - W09
+  math:
+  - 'Proofs: floating-point error model and Kahan summation''s error bound; why bf16 keeps fp32''s range; loss scaling for
+    fp16'
+  - 'Proofs: Adam''s bias correction; why warmup helps adaptive optimizers (the RAdam variance argument); scale invariance
+    under BatchNorm → effective learning rate with weight decay'
+  - 'Original papers, three passes: Micikevicius et al. 2018 Mixed Precision Training; Loshchilov & Hutter 2019 AdamW; Liu
+    et al. 2020 RAdam; Power et al. 2022 Grokking'
+  build:
+  - 'Reproduce (A100): grokking on modular addition — train/validation curves with and without weight decay, in fp32 and bf16;
+    also fp32 vs bf16 vs fp16-with-loss-scaling throughput'
+  - 'Inside the model: the grokked network''s embeddings in the Fourier basis (the Nanda et al. 2023 analysis: it learns trigonometric
+    features). Extension: preprint #1 experiments'
+  deliverable: 'prove why modern training recipes work, and reproduce grokking — the experiments here feed preprint #1.'
+  key_results: []
+  tasks: []
+- id: C1
+  kind: consolidation
+  phase: 2
+  title: 'Consolidation C1 — review, relearn, deep dive: optimization and autodiff; Slurm'
+  math:
+  - Relearning protocol on weak Weeks 1–9 topics
+  - 'Deep dive: optimization theory and automatic differentiation'
+  - 'Slurm: sbatch, job arrays, GPU and time requests, squeue/sacct'
+  build:
+  - Re-implement dlkit.autograd from a blank file
+  - Hessian–vector products and L-BFGS
+  - Run the Week 9 sweep as a Slurm job array
+  deliverable: Weak topics re-tested at 80% or more; review queue empty; modules re-implemented from memory.
+  key_results: []
+  tasks:
+  - c1_slurm_array
+- id: W10
+  kind: topic
+  phase: 3
+  title: Fourier and convolution ∥ CNNs
+  math:
+  - Nyquist–Shannon; aliasing
+  - DFT and FFT
+  - Convolution theorem; conv from equivariance
+  - Receptive fields; anti-aliasing
+  - 'Losses ∥ metrics: top-1/top-5, corruption error; validation loss vs accuracy'
+  - 'Activations: ReLU vs GELU in CNNs, ReLU6/hard-swish in MobileNet, sigmoid gating in SE blocks'
+  - 'Architecture ∥ interpretability: VGG → ResNet → ConvNeXt; feature visualization, Grad-CAM, integrated gradients, saliency
+    sanity checks'
+  - 'Attention: SE (channel) and CBAM (spatial) attention in ResNet; non-local blocks'
+  - 'Objective: weight sharing as a built-in parameter constraint'
+  build:
+  - FFT from scratch
+  - Conv2d via im2col
+  - LeNet (Keras), VGG, ResNet-18 ≈ 93%
+  - 'Grad-CAM; reproduction #1 (ResNet)'
+  deliverable: ResNet reproduction report.
+  paper_idea: Does vision need mean-centering? RMSNorm in CNNs.
+  tasks:
+  - w10_conv2d
+  - w10_fft
+- id: W10B
+  kind: topic
+  phase: 3
+  title: Image processing ∥ convolution zoo
+  math:
+  - Linear shift-invariant filters; separability (rank-1 kernels)
+  - Gaussian scale space; Sobel/Laplacian; Canny
+  - Morphology, histogram equalization, colour spaces
+  - 'Conv arithmetic: stride, padding, dilation, groups, depthwise-separable, transposed (adjoint), deformable'
+  - 'Losses ∥ metrics: L1, L2, perceptual loss; PSNR, SSIM'
+  - 'Objective: restoration = data term + smoothness prior (Tikhonov, TV)'
+  build:
+  - Filters from scratch vs OpenCV/scipy
+  - 'Depthwise-separable vs standard conv: FLOPs and accuracy'
+  - Transposed conv checkerboard artefacts vs resize-conv
+  - Augmentation pipeline (geometric + photometric)
+  deliverable: Filter library and a conv-variant FLOPs/accuracy table.
+  paper_idea: Learned vs fixed front-end filters under distribution shift.
+  key_results:
+  - Separable kernel = rank-1 outer product; cost 2k vs k²
+  - Transposed conv is the adjoint of strided conv
+  - Output size = ⌊(n + 2p − d(k−1) − 1)/s⌋ + 1
+  tasks:
+  - w10b_gaussian_sobel
+  - w10b_conv_variants
+- id: D7
+  kind: depth
+  phase: 3
+  title: 'Depth: CNNs and image processing in depth'
+  covers:
+  - W10
+  - W10B
+  math:
+  - 'Proofs: convolution theorem; convolution is the unique linear translation-equivariant map; receptive-field formula with
+    stride and dilation'
+  - 'Proofs: striding breaks shift invariance (aliasing, via the sampling theorem); an identity skip connection keeps a gradient
+    path whose norm does not shrink with depth'
+  - 'Original papers, three passes: He et al. 2016 ResNet; Zhang 2019 Making Convolutional Networks Shift-Invariant Again;
+    Liu et al. 2022 ConvNeXt'
+  build:
+  - 'Reproduce (A100): ResNet-20/56 on CIFAR-10 with the paper''s recipe (paper: 91.25% and 93.03%); add blur-pool and measure
+    shift consistency'
+  - 'Inside the model: Grad-CAM and integrated gradients on his ResNet, then the Adebayo sanity check (randomized weights).
+    Extension: the Week 10B idea — fixed filter-bank first layer at low data'
+  deliverable: prove what convolution guarantees and what it doesn't, and reproduce ResNet's numbers exactly.
+  key_results: []
+  tasks: []
+- id: W11
+  kind: topic
+  phase: 3
+  title: Time–frequency, Kalman ∥ sensors and audio
+  math:
+  - STFT, mel scale, MFCC
+  - FIR/IIR filters
+  - IMU noise, bias, sync
+  - Kalman filter from Bayes
+  - 'Losses ∥ metrics: macro-F1, frame vs segment scoring, false-accept/false-reject rates, DET curves'
+  - 'Architecture ∥ interpretability: 1D CNN vs RNN vs TCN for sensors; attribution over time and channels'
+  - 'Attention: attention pooling over time vs mean/max pooling'
+  - 'Objective: Kalman filter as weighted least squares over states'
+  build:
+  - dlkit.signal vs librosa
+  - 'HAR: features + GBDT vs 1D CNN'
+  - Accelerometer + gyroscope fusion
+  - Keyword spotting ≥ 90%
+  deliverable: HAR report and keyword-spotting model.
+  paper_idea: A differentiable Kalman pre-filter for robust activity recognition.
+  tasks:
+  - w11_stft
+  - w11_kalman_1d
+- id: W11B
+  kind: topic
+  phase: 3
+  title: Audio processing toolkit
+  math:
+  - Windows and leakage; overlap-add; phase vocoder
+  - 'Pitch: autocorrelation, YIN'
+  - Pre-emphasis, LPC, cepstrum
+  - 'Noise reduction: spectral subtraction, Wiener gain; SNR, SI-SDR'
+  - 'Losses ∥ metrics: SI-SDR loss and metric, multi-resolution STFT loss, PIT; PESQ, STOI'
+  - 'Objective: PIT — a min over output permutations inside the loss'
+  build:
+  - Pitch tracker vs librosa.pyin
+  - 'Denoiser: STFT → Wiener gain → iSTFT'
+  - SpecAugment, mixup on audio
+  - Small audio-event classifier (ESC-50 subset)
+  deliverable: Pitch and denoising notebook with SI-SDR results.
+  paper_idea: Sensor-aware audio augmentation for low-resource event detection.
+  key_results:
+  - Wiener gain ξ/(1+ξ)
+  - SI-SDR is invariant to rescaling the estimate
+  - YIN's cumulative-mean normalization avoids τ=0 bias
+  tasks:
+  - w11b_yin_pitch
+  - w11b_wiener_sisdr
+- id: D8
+  kind: depth
+  phase: 3
+  title: 'Depth: Signals, sensors and audio in depth'
+  covers:
+  - W11
+  - W11B
+  math:
+  - 'Proofs: the Kalman filter is the minimum-mean-squared-error estimator for linear Gaussian systems; the Wiener filter
+    as the frequency-domain MMSE solution'
+  - 'Proofs: STFT invertibility and the constant-overlap-add condition; why phase matters (Griffin–Lim as alternating projections)'
+  - 'Original papers, three passes: Kalman 1960; Griffin & Lim 1984; Luo & Mesgarani 2019 Conv-TasNet'
+  build:
+  - 'Reproduce (A100): Conv-TasNet on a two-speaker Libri2Mix subset; SI-SDR improvement on the test set, 3 seeds'
+  - 'Inside the model: visualize the learned encoder filters — do they look like a filterbank? Extension: the Week 11 idea
+    — a differentiable Kalman pre-filter for activity recognition'
+  deliverable: prove the estimation results behind filtering and enhancement, and reproduce a neural speech-separation model.
+  key_results: []
+  tasks: []
+- id: W12
+  kind: topic
+  phase: 3
+  title: Unlabeled-data theory ∥ semi-supervised learning
+  math:
+  - Smoothness, cluster, manifold assumptions
+  - Entropy minimization
+  - Label propagation closed form
+  - Consistency; FixMatch
+  - 'Losses ∥ metrics: consistency loss, entropy minimization, thresholded pseudo-label CE; accuracy vs label budget'
+  - 'Objective: supervised term + weighted unsupervised term with ramp-up'
+  build:
+  - Semi-supervised GMM
+  - Pseudo-labels on CIFAR-10
+  - Mean Teacher, FixMatch at 250 / 4k labels
+  - Semi-supervised HAR with class mismatch
+  deliverable: CIFAR-10 table at 250 / 1k / 4k labels.
+  paper_idea: Cross-modal pseudo-labels for sensor data.
+  tasks:
+  - w12_label_propagation
+  - w12_fixmatch_targets
+- id: W13
+  kind: topic
+  phase: 3
+  title: Contrastive theory ∥ self-supervised learning
+  math:
+  - InfoNCE and the log N bound
+  - Collapse and stop-gradient
+  - Alignment and uniformity
+  - VICReg, Barlow Twins
+  - 'Losses ∥ metrics: contrastive, triplet with hard mining, InfoNCE, ArcFace; linear probe, k-NN, Recall@K'
+  - 'Architecture ∥ interpretability: backbone/projection head/predictor; linear probes and CKA'
+  - 'Objective: avoid the trivial collapsed minimum (negatives, stop-gradient, variance terms)'
+  build:
+  - Denoising autoencoder
+  - SimCLR, BYOL/SimSiam, VICReg
+  - SSL-initialized U-Net segmentation
+  - Contrastive pretraining on IMU
+  deliverable: SSL comparison with probes, alignment, uniformity, rank.
+  paper_idea: Self-supervised pretraining + FixMatch for low-label sensors.
+  tasks:
+  - w13_info_nce
+  - w13_effective_rank
+- id: D9
+  kind: depth
+  phase: 3
+  title: 'Depth: Semi- and self-supervised learning in depth'
+  covers:
+  - W12
+  - W13
+  math:
+  - 'Proofs: label propagation''s closed form and the harmonic solution; when unlabeled data cannot help (the cluster assumption
+    fails)'
+  - 'Proofs: InfoNCE is a lower bound on mutual information (bounded by log N); alignment and uniformity decomposition (Wang
+    & Isola 2020); why VICReg''s variance term prevents collapse'
+  - 'Original papers, three passes: Sohn et al. 2020 FixMatch; Chen et al. 2020 SimCLR; Grill et al. 2020 BYOL; Bardes et
+    al. 2022 VICReg'
+  build:
+  - 'Reproduce (A100): SimCLR with ResNet-18 on CIFAR-10, 200 epochs, linear-probe evaluation; batch-size and temperature
+    ablation'
+  - 'Inside the model: alignment and uniformity measured during training; the dimensional-collapse check (singular values
+    of the embeddings). Extension: the Week 13 idea (SSL + FixMatch for sensors)'
+  deliverable: prove what contrastive and consistency objectives optimize, and reproduce SimCLR on CIFAR-10.
+  key_results: []
+  tasks: []
+- id: W13B
+  kind: topic
+  phase: 3
+  title: 'Vision tasks: classification, detection, segmentation'
+  math:
+  - Task formulations and output parameterizations
+  - Anchors, box coding, IoU/GIoU, NMS
+  - RoI Align; FPN; one- vs two-stage; DETR matching (Hungarian)
+  - Semantic, instance, panoptic segmentation; U-Net; keypoints
+  - 'Losses ∥ metrics: smooth L1, IoU/GIoU/DIoU, focal, Dice, Tversky, heatmap and scale-invariant depth losses; AP, COCO
+    mAP, mIoU, PQ, OKS, AbsRel, MOTA'
+  - 'Activations: per-class sigmoid vs softmax heads, sigmoid heatmaps, positive outputs via exp/softplus'
+  - 'Architecture ∥ interpretability: backbone, FPN neck and heads; one- vs two-stage vs DETR; DETR query attention'
+  - 'Attention: DETR cross-attention from object queries; deformable attention'
+  - 'Objective: set prediction with Hungarian matching (an LP) inside the loss'
+  build:
+  - Box utilities + NMS from scratch
+  - Fine-tune Faster R-CNN / YOLO on a small dataset
+  - U-Net segmentation; Mask R-CNN inference
+  - Error analysis per task
+  deliverable: Detection and segmentation baselines with error analysis.
+  paper_idea: Self-supervised pretraining effects on small-object detection.
+  key_results:
+  - Box deltas (tx, ty, tw, th) and their inverse
+  - 'RoI Align: bilinear sampling, no quantization'
+  - NMS greedily keeps the max-score box
+  tasks:
+  - w13b_box_coding
+  - w13b_roi_align
+  - w13b_average_precision
+- id: D10
+  kind: depth
+  phase: 3
+  title: 'Depth: Vision tasks in depth'
+  covers:
+  - W13B
+  math:
+  - 'Proofs: focal loss''s gradient and why it down-weights easy negatives; GIoU is a lower bound on IoU with a non-zero gradient
+    for disjoint boxes'
+  - 'Proofs: the Hungarian algorithm finds an optimal assignment (augmenting paths, sketch); AP as the area under the interpolated
+    PR curve; panoptic quality = SQ × RQ'
+  - 'Original papers, three passes: Lin et al. 2017 Focal Loss (RetinaNet); Carion et al. 2020 DETR; Kirillov et al. 2019
+    Panoptic Segmentation'
+  build:
+  - 'Reproduce (A100): fine-tune RetinaNet (ResNet-50-FPN) on Pascal VOC 2007; evaluate with his own mAP code and with pycocotools'
+  - 'Inside the model: which FPN level fires for which object size; error breakdown (localization, confusion, background,
+    missed). Extension: the Week 13B idea (SSL pretraining and small objects)'
+  deliverable: prove the pieces of modern detection, and reproduce a detector with his own evaluation code.
+  key_results: []
+  tasks: []
+- id: W14
+  kind: topic
+  phase: 3
+  title: Sequence probability ∥ text I
+  math:
+  - Perplexity = exp(cross-entropy)
+  - BPE as compression
+  - SGNS as PMI factorization
+  - BPTT; vanishing gradients; LSTM gates
+  - 'Losses ∥ metrics: next-token CE, perplexity, negative sampling; BLEU, ROUGE, chrF'
+  - 'Activations: sigmoid gates and tanh candidate in LSTM/GRU; additive cell path vs vanishing gradients'
+  - 'Architecture ∥ interpretability: RNN vs LSTM vs attention seq2seq; embedding geometry, probing hidden states'
+  - 'Attention: encoder–decoder bottleneck; Bahdanau (additive) and Luong (multiplicative) attention; alignment plots'
+  - 'Objective: autoregressive factorization → sum of next-token cross-entropies; negative sampling'
+  build:
+  - n-gram LM
+  - BPE tokenizer from scratch
+  - word2vec SGNS
+  - char-RNN, LSTM, seq2seq + attention
+  deliverable: dlkit.text; IMDB comparison table.
+  paper_idea: Tokenizer granularity for low-resource languages.
+  tasks:
+  - w14_bpe_merges
+  - w14_lstm_cell
+- id: W15
+  kind: topic
+  phase: 3
+  title: Attention math ∥ transformers
+  math:
+  - √d_k from the variance of q·k
+  - Permutation equivariance
+  - RoPE's relative-position property
+  - 'Masked modelling: BERT and MAE'
+  - 'Losses ∥ metrics: MLM loss, MAE pixel loss; accuracy, F1, Matthews correlation'
+  - 'Activations: GELU, GLU/GeGLU/SwiGLU and the 2/3 hidden-size rule, softmax saturation in attention'
+  - 'Architecture ∥ interpretability: transformer block anatomy, residual stream; attention maps are not explanations'
+  - 'Attention: scaled dot-product self-attention, multi-head, causal masks'
+  - 'Objective: masked-token/patch likelihood; masking rate sets difficulty'
+  build:
+  - Attention and MHA (PyTorch + TensorFlow)
+  - GPT on TinyShakespeare
+  - Mini-BERT, ViT
+  - Tiny MAE vs SimCLR
+  deliverable: Transformer library in dlkit.
+  paper_idea: Curriculum masking ratios for MAE on small data.
+  tasks:
+  - w15_attention
+  - w15_rope
+- id: D11
+  kind: depth
+  phase: 3
+  title: 'Depth: Text and transformers in depth'
+  covers:
+  - W14
+  - W15
+  math:
+  - 'Proofs: perplexity, cross-entropy and bits per token are the same quantity; the LSTM''s constant error carousel; vanishing
+    gradients in a tanh RNN'
+  - 'Proofs: √d\_k scaling from the variance of a dot product; RoPE depends only on relative position; attention as a kernel
+    smoother'
+  - 'Original papers, three passes: Vaswani et al. 2017; Devlin et al. 2019 BERT; Su et al. 2021 RoFormer; He et al. 2022
+    MAE; Eldan & Li 2023 TinyStories'
+  build:
+  - 'Reproduce (A100): GPT models of 3 sizes (\~3M, 10M, 30M parameters) on TinyStories; validation loss vs size and tokens'
+  - 'Inside the model: classify his GPT''s attention heads (previous-token, positional, induction-like) from their attention
+    patterns. Extension: RoPE vs learned positions for length extrapolation'
+  deliverable: prove why attention is built the way it is, and train his own small language models to see scaling happen.
+  key_results: []
+  tasks: []
+- id: W15A
+  kind: topic
+  phase: 3
+  title: Attention as a family of operators ∥ an attention zoo from scratch
+  math:
+  - Attention as Nadaraya–Watson kernel regression; additive (Bahdanau) vs multiplicative (Luong) vs scaled dot-product; hard
+    vs soft; attention pooling
+  - Self, cross and causal attention; multi-head as low-rank subspaces; padding, causal, prefix-LM and block masks; rank collapse
+  - 'Positions in attention: sinusoidal, learned, relative (Shaw, T5), ALiBi, RoPE (relative property), NoPE; length extrapolation'
+  - 'Sparse and local attention: sliding window, dilated/strided, Longformer/BigBird global + random, Swin shifted windows,
+    axial, deformable'
+  - 'Approximating softmax: linear attention as an RNN, Performer random features, Linformer, Nyström, LSH; failure on exact
+    recall'
+  - 'Attention beyond sequences and at inference: SE/CBAM, non-local, GAT, slot and Perceiver latent attention; MQA/GQA/MLA
+    KV-cache math; attention sinks; sigmoid and differential attention'
+  - 'Losses ∥ metrics: associative-recall accuracy, attention entropy and effective rank, kernel approximation error'
+  - 'Activations: softmax vs sigmoid vs ReLU-normalized attention; elu+1 feature map; softmax temperature'
+  - 'Architecture ∥ interpretability: attention weights are not explanations; rollout vs causal ablation; attention sinks'
+  - 'Objective: softmax = argmax of ⟨p,s⟩ + entropy on the simplex; sparsemax drops the entropy'
+  build:
+  - Additive and dot-product seq2seq attention with alignment plots
+  - Multi-head attention with every mask type, checked against PyTorch
+  - Five position schemes in one GPT; train 128, test 512
+  - Block-sparse and shifted-window attention; memory vs n on the A100
+  - Causal linear attention as a recurrence; Performer error vs features
+  - GAT on Cora; Perceiver latent cross-attention; KV-cache calculator
+  deliverable: dlkit.attention with every major type, plus an attention-zoo benchmark (recall, long-range, memory) on the
+    A100.
+  paper_idea: Which attention does sensor fusion need?
+  key_results:
+  - Attention = kernel smoother with an exponential kernel; √d_k sets the bandwidth
+  - 'RoPE: ⟨R_m q, R_n k⟩ depends only on m − n'
+  - Causal linear attention = RNN with state S = Σ φ(k)vᵀ; it can't do exact recall
+  - KV cache = 2 · layers · kv_heads · d_head · seq · bytes; GQA/MQA divide it by the group size
+  tasks:
+  - w15a_attention_types
+  - w15a_linear_positions
+- id: W15B
+  kind: topic
+  phase: 3
+  title: why architectures work ∥modern architectures from scratch — normalization, efficient attention, mixture of experts,
+    state-space models
+  math:
+  - 'Normalization and residual design: gradient norms at initialization for post-LN vs pre-LN (why post-LN needs warmup);
+    RMSNorm; residual scaling and depth'
+  - 'Efficient attention: O(n²) memory; the online-softmax update and why tiled attention is exact (FlashAttention); KV cache;
+    multi-query and grouped-query attention; sliding-window attention'
+  - 'Mixture of experts: top-k gating, capacity factor, load-balancing loss; parameters vs FLOPs per token; expert collapse'
+  - 'State-space models: a continuous linear system, zero-order-hold discretization, the recurrence and convolution views
+    and their equivalence; why input-dependent (selective) parameters break the convolution trick (Mamba)'
+  - 'Architecture families and inductive bias: CNN vs ViT vs MLP-Mixer vs SSM; U-Net vs DiT for diffusion; width/depth scaling
+    and the μP idea'
+  - Positional schemes (absolute, RoPE, ALiBi) and length extrapolation; parameter and FLOP accounting for any block
+  - 'Losses ∥ metrics this week: the load-balancing auxiliary loss and router z-loss for MoE; metrics — parameters, FLOPs,
+    peak memory and tokens per second next to accuracy, always at equal compute.'
+  - 'Activations this week: SwiGLU vs GELU inside modern blocks, SiLU gating in Mamba, and the softmax router of MoE.'
+  - 'Objective: task loss + MoE load-balancing penalty; comparisons at fixed compute'
+  build:
+  - Pre-LN, post-LN and RMSNorm blocks; train a 12-layer transformer each way with and without warmup; per-layer gradient-norm
+    plots
+  - Tiled online-softmax attention in NumPy; KV-cache generation loop; GQA; time PyTorch SDPA vs naive attention on the A100
+    for n = 512–16k
+  - MoE layer from scratch (8 experts, top-2) inside his GPT; expert-usage histograms with and without the balancing loss
+  - Discretized SSM layer in recurrent and convolutional mode; a small selective-SSM block on the selective-copying task
+  - 'Same-compute comparison: small CNN, ViT, Mixer on CIFAR-10 and Transformer vs SSM on a long-sequence task (an LRA ListOps
+    subset)'
+  - FLOP/parameter calculator checked against fvcore; RoPE vs ALiBi extrapolation test
+  deliverable: 'dlkit.arch: pre-/post-LN and RMSNorm blocks, tiled attention, KV cache, GQA, MoE layer, SSM layer — each tested
+    against PyTorch'
+  paper_idea: Do MoE routers specialize by modality?
+  tasks:
+  - w15b_flash_attention
+  - w15b_moe_ssm
+  key_results:
+  - 'Online softmax: m''=max(m, s), l''=l·e^(m−m'')+Σe^(s−m''), exact'
+  - 'MoE: parameters scale with experts, FLOPs with k'
+  - 'SSM: recurrent and convolutional forms are equal; selectivity forces a scan'
+  - Pre-LN keeps gradient scale stable at init; post-LN needs warmup
+- id: D12
+  kind: depth
+  phase: 3
+  title: 'Depth: Attention and architectures in depth'
+  covers:
+  - W15A
+  - W15B
+  math:
+  - 'Proofs (attention): attention as kernel smoothing; RoPE''s relative-position property; Performer''s unbiased softmax-kernel
+    estimate; linear attention is an RNN'
+  - 'Proofs (architectures): pre-LN vs post-LN gradient scale; online softmax is exact and FlashAttention''s IO complexity;
+    SSM recurrence–convolution equivalence; MoE balancing minimized by uniform routing'
+  - 'Original papers, three passes: Katharopoulos 2020; Performer; BigBird; FlashAttention; Mamba; Zoology (Arora et al. 2023)'
+  build:
+  - 'Reproduce (A100): Zoology MQAR recall — softmax vs linear vs sliding-window attention vs Mamba-style SSM; ~25M transformer
+    vs SSM vs MoE on TinyStories at equal compute'
+  - 'Inside the model: attention sinks in GPT-2 and StreamingLLM-style generation with sink tokens; which heads do recall.
+    Extension: Week 15A or 15B idea'
+  deliverable: prove the key results about attention types and modern blocks, and compare them fairly at equal compute — including
+    the recall gap between exact and approximate attention.
+  key_results: []
+  tasks: []
+- id: C2
+  kind: consolidation
+  phase: 3
+  title: 'Consolidation C2 — review, relearn, deep dive: self-supervised learning'
+  math:
+  - Relearning protocol on weak Weeks 10–15 topics
+  - 'Deep dive: InfoNCE bounds and collapse dynamics'
+  build:
+  - Re-implement attention + RoPE and a ResNet block from blank files
+  - Compare SimCLR, BYOL and VICReg embedding spectra
+  deliverable: Weak topics re-tested at 80% or more; review queue empty; modules re-implemented from memory.
+  key_results: []
+  tasks: []
+- id: R2
+  kind: rest
+  phase: 3
+  title: Rest week R2 — no study (mid-year review on Sunday)
+  math: []
+  build: []
+  deliverable: 'Rested. Optional: up to 30 minutes a day on due review items.'
+  key_results: []
+  tasks: []
+- id: W16
+  kind: topic
+  phase: 4
+  title: Game theory ∥ GANs, robustness, Shapley
+  math:
+  - Nash equilibria; minimax via LP duality
+  - Hedge regret; GDA cycling
+  - Optimal discriminator
+  - Danskin; Shapley axioms
+  - 'Losses ∥ metrics: minimax vs non-saturating GAN loss, hinge, Wasserstein; robust accuracy'
+  - 'Activations: Leaky ReLU discriminators, tanh image outputs'
+  - 'Architecture ∥ interpretability: integrated gradients and Shapley axioms; adversarial examples as probes'
+  - 'Objective: minimax — GANs and adversarial training; solutions are saddle points'
+  build:
+  - Nash and zero-sum solvers
+  - Hedge, OGDA, extragradient
+  - DCGAN; FGSM and PGD
+  - Exact vs sampled Shapley
+  deliverable: dlkit.games; robustness table.
+  paper_idea: Shapley-based modality balancing.
+  tasks:
+  - w16_hedge
+  - w16_shapley
+- id: D13
+  kind: depth
+  phase: 4
+  title: 'Depth: Game theory, GANs and robustness in depth'
+  covers:
+  - W16
+  math:
+  - 'Proofs: von Neumann''s minimax theorem via LP duality; existence of Nash equilibria (Brouwer, sketch); Shapley value
+    is the unique value satisfying its four axioms'
+  - 'Proofs: the optimal GAN discriminator and the Jensen–Shannon objective; simultaneous gradient descent–ascent cycles on
+    a bilinear game; the Wasserstein-1 dual'
+  - 'Original papers, three passes: Goodfellow et al. 2014; Arjovsky et al. 2017 WGAN; Madry et al. 2018 Towards Deep Learning
+    Models Resistant to Adversarial Attacks; Lundberg & Lee 2017 SHAP'
+  build:
+  - 'Reproduce (A100): PGD adversarial training on CIFAR-10 (ResNet-18, ε = 8/255, PGD-7 for training, PGD-20 for evaluation)'
+  - 'Inside the model: input-gradient maps of the standard vs the robust model — robust models'' gradients look like the object.
+    Extension: the Week 16 idea (Shapley modality balancing)'
+  deliverable: prove the equilibrium results behind adversarial training, and reproduce adversarial training at the paper's
+    scale.
+  key_results: []
+  tasks: []
+- id: W17
+  kind: topic
+  phase: 4
+  title: MDPs and Bellman ∥ RL I
+  math:
+  - UCB from Hoeffding; Thompson
+  - Bellman equations
+  - Contraction; value iteration
+  - MC vs TD; Q-learning; deadly triad
+  - 'Losses ∥ metrics: TD error, Bellman loss; regret, average return with CIs'
+  - 'Objective: maximize expected discounted return; Bellman fixed point'
+  build:
+  - Bandit testbed
+  - Gridworld env (Gymnasium API)
+  - Policy and value iteration
+  - SARSA, Q-learning, double Q
+  deliverable: Tabular RL suite with 10-seed curves.
+  paper_idea: Bandit-driven active sensor selection.
+  tasks:
+  - w17_value_iteration
+  - w17_q_learning
+- id: W18
+  kind: topic
+  phase: 4
+  title: Policy gradients ∥ deep RL and self-play
+  math:
+  - Replay and target networks
+  - Policy-gradient theorem; baselines
+  - GAE; PPO's clipped objective
+  - CFR; UCT; multi-agent learning
+  - 'Losses ∥ metrics: Huber TD loss, policy-gradient surrogate, PPO clip; IQM return over seeds'
+  - 'Activations: tanh-squashed Gaussian policies and the log-prob Jacobian correction'
+  - 'Objective: policy-gradient rewrite; PPO''s clipped surrogate as a trust region'
+  build:
+  - DQN, Double DQN
+  - REINFORCE, A2C
+  - 'PPO: LunarLander ≥ 200'
+  - CFR on Kuhn poker; MCTS Connect Four
+  deliverable: Deep RL suite in dlkit.rl.
+  paper_idea: Adversarial modality dropout as a min–max game.
+  tasks:
+  - w18_gae
+  - w18_ppo_clip
+- id: D14
+  kind: depth
+  phase: 4
+  title: 'Depth: Reinforcement learning in depth'
+  covers:
+  - W17
+  - W18
+  math:
+  - 'Proofs: the Bellman operator is a γ-contraction; the policy improvement theorem; UCB''s logarithmic regret bound'
+  - 'Proofs: the policy-gradient theorem; GAE as an exponentially weighted sum of TD errors; PPO''s clipped objective as a
+    pessimistic surrogate of the trust-region objective'
+  - 'Original papers, three passes: Mnih et al. 2015 DQN; Schulman et al. 2016 GAE; Schulman et al. 2017 PPO; Andrychowicz
+    et al. 2021 What Matters in On-Policy RL; Agarwal et al. 2021 rliable'
+  build:
+  - 'Reproduce (A100): PPO on HalfCheetah (Gymnasium/MuJoCo) and DQN on Atari Pong, 5 seeds each, reported as interquartile
+    mean with CIs'
+  - 'Inside the model: what the value network has learned (value along trajectories; saliency on Pong frames). Extension:
+    the Week 17 idea (bandit sensor selection)'
+  deliverable: prove the core theorems of RL and reproduce two landmark agents with honest statistics over seeds.
+  key_results: []
+  tasks: []
+- id: W19
+  kind: topic
+  phase: 4
+  title: Scaling and preferences ∥ LLMs
+  math:
+  - 'Sampling: temperature, top-k, top-p'
+  - 6·N·D; memory; KV cache
+  - LoRA update; intrinsic dimension
+  - Bradley–Terry; RLHF; DPO
+  - 'Losses ∥ metrics: SFT CE on responses, Bradley–Terry, DPO; perplexity, exact match, pass@k, win rate'
+  - 'Activations: SwiGLU MLP in Llama-style models, GELU vs SwiGLU at equal parameters'
+  - 'Architecture ∥ interpretability: Llama block choices (pre-RMSNorm, RoPE, SwiGLU, GQA); logit lens'
+  - 'Attention: KV cache, GQA in a Llama-style model, sliding window with sink tokens'
+  - 'Objective: max E[reward] − β·KL(π‖π_ref); its closed-form optimum gives DPO'
+  build:
+  - Llama-style GPT
+  - Scaling runs on TinyStories
+  - 'LoRA + reproduction #2'
+  - SFT, RLHF, DPO, RAG
+  deliverable: LoRA reproduction; SFT → RLHF → DPO comparison.
+  paper_idea: Allocating LoRA rank from first-step gradient spectra.
+  tasks:
+  - w19_top_p
+  - w19_dpo_loss
+- id: W19B
+  kind: topic
+  phase: 4
+  title: the transformer as a sum of circuits ∥mechanistic interpretability of his own LLM and GPT-2 small
+  math:
+  - The residual stream; attention heads as QK (where to look) and OV (what to move) circuits; path expansion of 1- and 2-layer
+    attention-only transformers; direct logit attribution
+  - 'Induction heads: previous-token head + induction head via K-composition; the in-context-learning phase change during
+    training'
+  - 'Causal interventions: activation patching, path patching, attribution patching (the gradient approximation and when it
+    fails); logit lens and tuned lens'
+  - 'Superposition: more features than dimensions, interference, why sparsity makes it pay off; polysemantic neurons; the
+    linear representation hypothesis'
+  - 'Sparse autoencoders (dictionary learning): objective, dead and dense latents, shrinkage; how to judge a feature; feature
+    steering'
+  - Probing vs causal evidence (a probe shows information is present, not that it is used); steering vectors; interpretability
+    beyond text — CLIP multimodal neurons, his own sensor models
+  - 'Losses ∥ metrics this week: the sparse-autoencoder objective (reconstruction + L1, or top-k); metrics — L0 sparsity,
+    fraction of variance explained, loss recovered when the SAE is spliced in, and logit difference for circuit analysis.'
+  - 'Activations this week: why MLP neurons are polysemantic (superposition), ReLU vs JumpReLU vs top-k in sparse autoencoders,
+    and the attention softmax as a routing decision that circuits can be read from.'
+  - 'Objective: SAE dictionary learning — reconstruction + λ·sparsity with unit-norm dictionary'
+  build:
+  - Train a 2-layer attention-only transformer on synthetic sequences; TransformerLens hooks; compute and inspect W\_QK and
+    W\_OV; direct logit attribution per head
+  - Detect induction heads in his model and in GPT-2 small with a prefix-matching score; ablate them and measure in-context
+    loss
+  - Reproduce the core of the IOI circuit in GPT-2 small with activation patching; layer-by-layer logit lens
+  - Toy Models of Superposition from scratch; reproduce the sparsity phase diagram
+  - Train an SAE on GPT-2 small's layer-6 residual stream on the A100; top-activating examples and a feature dashboard; steer
+    with one feature
+  - Linear probe and a steering vector for one concept; compare probe accuracy with the causal effect of ablating the same
+    direction
+  deliverable: Reproduce induction-head detection and the IOI activation-patching result on GPT-2 small with TransformerLens;
+    the same tools run on his own GPT from Week 19
+  paper_idea: Mechanistic circuits for sensor fusion.
+  tasks:
+  - w19b_circuits_patching
+  - w19b_sparse_autoencoder
+  key_results:
+  - Residual stream = sum of paths; QK decides where to look, OV what to move
+  - Induction head = previous-token head + K-composition
+  - Activation patching measures causal effect; probes only show presence
+  - 'Superposition: sparse features packed into fewer dimensions; SAEs try to unpack them'
+- id: D15
+  kind: depth
+  phase: 4
+  title: 'Depth: LLMs and mechanistic interpretability in depth'
+  covers:
+  - W19
+  - W19B
+  math:
+  - 'Proofs: Bradley–Terry MLE for reward models; DPO from the KL-regularized RL objective; fitting a scaling law as a power
+    law in log space'
+  - 'Proofs: path expansion of a 2-layer attention-only transformer (with K-composition); the 2-features-in-1-dimension superposition
+    toy model, solved analytically; why an L1 penalty shrinks SAE activations'
+  - 'Original papers, three passes: Rafailov et al. 2023 DPO; Elhage et al. 2021 Transformer Circuits; Olsson et al. 2022
+    Induction Heads; Bricken et al. 2023 Towards Monosemanticity'
+  build:
+  - 'Reproduce (A100): (1) the induction-head phase change — train 2-layer attention-only models and watch in-context-learning
+    loss drop as induction heads form; (2) a Towards-Monosemanticity-style sparse autoencoder on a 1-layer transformer''s
+    MLP'
+  - 'Inside the model: run the same SAE and patching tools on his own Week 19 LLM. Extension: the Week 19B idea (circuits
+    for sensor fusion) — preprint #3 experiments'
+  deliverable: 'prove the alignment and circuit results, and reproduce two interpretability findings from scratch — the experiments
+    here feed preprint #3.'
+  key_results: []
+  tasks: []
+- id: W20
+  kind: topic
+  phase: 4
+  title: Low-rank and adapter theory ∥ PEFT
+  math:
+  - PEFT taxonomy
+  - Adapters; prefix and prompt tuning
+  - DoRA, AdaLoRA, LoRA+, VeRA, IA³
+  - QLoRA memory math
+  - 'Losses ∥ metrics: accuracy vs trainable parameters and memory'
+  - 'Architecture ∥ interpretability: where adapters/prefixes/LoRA sit; SVD of LoRA updates, which layers change'
+  - 'Objective: same task loss, restricted feasible set (rank-r ΔW, prompt-only, frozen quantized weights)'
+  build:
+  - dlkit.peft injected into BERT, ViT, GPT
+  - Prompt, prefix and visual prompt tuning
+  - QLoRA of a 1–3B model on a free T4
+  - LoRA on Whisper or CLIP; 7-method benchmark
+  deliverable: PEFT benchmark at equal budgets.
+  paper_idea: Which PEFT method for which modality?
+  tasks:
+  - w20_lora
+  - w20_prefix_attention
+- id: D16
+  kind: depth
+  phase: 4
+  title: 'Depth: Parameter-efficient fine-tuning in depth'
+  covers:
+  - W20
+  math:
+  - 'Proofs: parameter counts for LoRA, adapters and prefix tuning; intrinsic dimension (Aghajanyan et al.) and why low rank
+    suffices; DoRA''s magnitude–direction decomposition'
+  - 'Proofs: NF4 is information-theoretically optimal for normally distributed weights (quantile construction); memory budget
+    for full FT vs LoRA vs QLoRA on a 7B model'
+  - 'Original papers, three passes: Hu et al. 2022 LoRA; Dettmers et al. 2023 QLoRA; Liu et al. 2024 DoRA; Aghajanyan et al.
+    2021 Intrinsic Dimensionality'
+  build:
+  - 'Reproduce (A100): QLoRA fine-tuning of a 7–8B open model on an instruction dataset; LoRA vs DoRA vs full fine-tuning
+    of a \~1B model on one task at equal steps'
+  - 'Inside the model: SVD of each layer''s ΔW — effective rank, and which layers and heads change most. Extension: the Week
+    20 idea'
+  deliverable: prove why low-rank and quantized fine-tuning work, and reproduce QLoRA at the scale it was made for.
+  key_results: []
+  tasks: []
+- id: C3
+  kind: consolidation
+  phase: 4
+  title: 'Consolidation C3 — review, relearn, deep dive: parameter-efficient fine-tuning'
+  math:
+  - Relearning protocol on weak Weeks 16–20 topics
+  - 'Deep dive: intrinsic dimension and LoRA expressivity'
+  build:
+  - Re-implement PPO and LoRA from blank files
+  - Build one PEFT variant not yet built, tested against peft
+  deliverable: Weak topics re-tested at 80% or more; review queue empty; modules re-implemented from memory.
+  key_results: []
+  tasks: []
+- id: W21
+  kind: topic
+  phase: 5
+  title: CTC and optical flow ∥ speech and video
+  math:
+  - CTC forward recursion
+  - Edit distance; beam search
+  - Brightness constancy; Lucas–Kanade
+  - (2+1)D and divided attention costs
+  - 'Losses ∥ metrics: CTC loss; WER, CER, endpoint error'
+  - 'Architecture ∥ interpretability: Conformer, factorized space–time attention; CTC alignments'
+  - 'Attention: Conformer relative-position self-attention, chunked streaming attention, factorized space–time attention'
+  - 'Objective: CTC marginal likelihood over alignments by dynamic programming'
+  build:
+  - CTC + WER from scratch
+  - Small ASR; Whisper evaluation
+  - Lucas–Kanade
+  - (2+1)D CNN and tiny TimeSformer
+  deliverable: ASR and video comparison tables.
+  paper_idea: A temporal-reliance score for audio and video benchmarks.
+  tasks:
+  - w21_ctc_loss
+  - w21_wer
+- id: D17
+  kind: depth
+  phase: 5
+  title: 'Depth: Speech and video in depth'
+  covers:
+  - W21
+  math:
+  - 'Proofs: the CTC forward–backward recursion and its gradient; CTC''s conditional-independence assumption and what it costs'
+  - 'Proofs: edit-distance dynamic programming is optimal; brightness constancy → optical-flow constraint and the aperture
+    problem'
+  - 'Original papers, three passes: Graves et al. 2006 CTC; Baevski et al. 2020 wav2vec 2.0; Radford et al. 2023 Whisper;
+    Bertasius et al. 2021 TimeSformer'
+  build:
+  - 'Reproduce (A100): fine-tune wav2vec 2.0 Base on the LibriSpeech 10-hour split with CTC; WER on test-clean without a language
+    model, then with a 4-gram'
+  - 'Inside the model: layer-wise linear probes for phones vs speaker identity; CTC alignment plots. Extension: his own Week
+    21 idea'
+  deliverable: prove how CTC aligns without alignments, and reproduce self-supervised speech recognition.
+  key_results: []
+  tasks: []
+- id: W22
+  kind: topic
+  phase: 5
+  title: ELBO and diffusion ∥ generative models
+  math:
+  - ELBO and reparameterization
+  - q(x_t | x₀) closed form
+  - DDIM; classifier-free guidance
+  - Flows; VQ-VAE; FID
+  - 'Losses ∥ metrics: ELBO, ε-prediction loss, flow matching; bits/dim, FID, IS, generative precision/recall'
+  - 'Activations: output ranges, log-variance/softplus heads, SiLU in diffusion U-Nets'
+  - 'Architecture ∥ interpretability: U-Net vs DiT, timestep/condition injection; cross-attention maps'
+  - 'Attention: cross-attention text conditioning in diffusion; self-attention at low resolutions only'
+  - 'Objective: ELBO; denoising as weighted regressions over noise levels; flow matching as vector-field regression'
+  build:
+  - VAE
+  - DDPM with CFG
+  - Flow matching
+  - VQ-VAE; FID from scratch
+  deliverable: 'Generative comparison: GAN, VAE, DDPM, flow matching.'
+  paper_idea: Flow-matching augmentation for low-data sensors.
+  tasks:
+  - w22_q_sample
+  - w22_frechet
+- id: D18
+  kind: depth
+  phase: 5
+  title: 'Depth: Generative models in depth'
+  covers:
+  - W22
+  math:
+  - 'Proofs: the ELBO and its gap (a KL divergence); DDPM''s closed-form q(x\_t | x\_0) and the simplified ε-prediction loss'
+  - 'Proofs: ε-prediction equals score estimation; classifier-free guidance from Bayes'' rule; conditional flow matching gives
+    the marginal vector field; FID as the Fréchet distance between Gaussians'
+  - 'Original papers, three passes: Ho et al. 2020 DDPM; Song et al. 2021 Score-Based SDEs; Ho & Salimans 2022 Classifier-Free
+    Guidance; Lipman et al. 2023 Flow Matching'
+  build:
+  - 'Reproduce (A100, \~2 days of training, started in Week 22): a \~35M-parameter DDPM on CIFAR-10; FID against training
+    steps, compared honestly with the paper''s 3.17 at far more compute; flow matching at equal compute'
+  - 'Inside the model: what each noise level contributes — denoise from different t and watch coarse-to-fine structure appear;
+    U-Net attention maps. Extension: his own Week 22 idea'
+  deliverable: prove the identities behind diffusion and flow matching, and train a diffusion model long enough to see FID
+    fall.
+  key_results: []
+  tasks: []
+- id: W23
+  kind: topic
+  phase: 5
+  title: Alignment and fusion ∥ multimodal learning
+  math:
+  - Fusion taxonomy
+  - CLIP loss and temperature
+  - 'VLM designs: Flamingo, BLIP-2, LLaVA'
+  - Uncertainty-weighted fusion
+  - 'Losses ∥ metrics: symmetric CLIP InfoNCE, captioning CE; Recall@K, NDCG, VQA accuracy, CIDEr, CLIPScore'
+  - 'Activations: sigmoid gating for fusion, FiLM, ignoring missing sensors'
+  - 'Architecture ∥ interpretability: early/late/cross-attention fusion, projectors and Q-Former; modality ablation, multimodal
+    neurons'
+  - 'Attention: cross-modal and co-attention, Perceiver latents, Q-Former queries, masking a missing modality'
+  - 'Objective: multi-objective (alignment + generation + per-modality); robustness as expectation over modality dropout'
+  build:
+  - Mini-CLIP on Flickr8k
+  - LLaVA-style VLM
+  - CLAP-style audio–text retrieval
+  - Multisensor fusion with modality dropout
+  deliverable: Fusion robustness table; capstone proposal.
+  paper_idea: Zero-shot activity recognition by aligning IMU with text.
+  tasks:
+  - w23_clip_loss
+  - w23_inverse_variance_fusion
+- id: D19
+  kind: depth
+  phase: 5
+  title: 'Depth: Multimodal learning in depth'
+  covers:
+  - W23
+  math:
+  - 'Proofs: symmetric InfoNCE and the role of the learned temperature; the modality gap as a consequence of initialization
+    and the contrastive loss (Liang et al. 2022)'
+  - 'Proofs: inverse-variance weighting is the optimal fusion of independent Gaussian sensors; marginalizing over a missing
+    modality; when late fusion loses information early fusion keeps'
+  - 'Original papers, three passes: Radford et al. 2021 CLIP; Liu et al. 2023 LLaVA; Liang et al. 2022 Mind the Gap; Girdhar
+    et al. 2023 ImageBind; his own two most-cited papers, re-read critically'
+  build:
+  - 'Reproduce (A100): CLIP-style training on a CC3M or COCO-captions subset with pretrained encoders and learned projections;
+    zero-shot CIFAR-10 and retrieval Recall@K; then a LLaVA-style projector on a small instruction set'
+  - 'Inside the model: measure the modality gap; SAE features at the fusion layer (from D15) — which are shared, which modality-specific.
+    Extension: pick the capstone, ideally extending his own published multimodal work'
+  deliverable: prove what contrastive alignment and fusion can and can't do, reproduce a CLIP-style model, and choose the
+    capstone from his own research line.
+  key_results: []
+  tasks: []
+- id: W24
+  kind: capstone
+  phase: 5
+  title: Capstone I ∥ reproduce
+  math:
+  - 'Pass 3 of the paper: re-derive'
+  - Related work
+  - Appendix hyperparameters
+  - Choose the extension
+  build:
+  - Experiment plan and data pipeline
+  - Implement from scratch
+  - Scaled-down full run
+  - Match the paper's trend
+  deliverable: Key result reproduced, gaps explained.
+  paper_idea: The capstone extension.
+  tasks: []
+- id: W25
+  kind: capstone
+  phase: 5
+  title: Capstone II ∥ extend and publish
+  math:
+  - How to write an ML paper
+  - Falsification and ablation logic
+  - Confidence intervals
+  - Final self-test
+  build:
+  - Ablations
+  - Extension over 3 seeds
+  - 4-page LaTeX report
+  - Clean repo; talk or blog post
+  deliverable: Capstone preprint posted; final checkpoint.
+  paper_idea: 'Turned into preprint #4.'
+  tasks: []

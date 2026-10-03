@@ -1,0 +1,10 @@
+streamlit>=1.42
+Authlib>=1.3.2
+openai>=1.40
+PyYAML>=6.0
+numpy>=1.26
+scipy>=1.11
+pandas>=2.0
+pytest>=8.0
+requests>=2.31
+statsmodels>=0.14
